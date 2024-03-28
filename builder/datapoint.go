@@ -16,7 +16,7 @@ package builder
 
 import (
 	"encoding/json"
-	"errors"
+	"fmt"
 )
 
 // Represents a measurement. Stores the time when the measurement occurred and its value.
@@ -57,7 +57,7 @@ func (dp *DataPoint) Float64Value() (float64, error) {
 	return val, nil
 }
 
-//20191101 add by wutz (no need)
+// 20191101 add by wutz (no need)
 func (dp *DataPoint) Float32Value() (float32, error) {
 	val, ok := dp.value.(float32)
 	if !ok {
@@ -81,7 +81,7 @@ func (dp *DataPoint) UnmarshalJSON(data []byte) error {
 	var v float64
 	ok := false
 	if v, ok = arr[0].(float64); !ok {
-		return errors.New("Invalid Timestamp type")
+		return fmt.Errorf("%s", "Invalid Timestamp type")
 	}
 
 	// Update the receiver with the values decoded.
