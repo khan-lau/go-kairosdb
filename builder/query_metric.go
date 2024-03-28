@@ -41,11 +41,11 @@ const (
 type QueryMetric interface {
 	// Add a map of tags. This narrows the query to only show data points
 	// associated with the tags' values.
-	AddTags(tags map[string]string) QueryMetric
+	AddTags(tags interface{}) QueryMetric
 
 	// Adds a tag with multiple values. This narrows the query to only show
 	// data points associated with the tag's values.
-	AddTag(name string, val string) QueryMetric
+	AddTag(name string, interface{}) QueryMetric
 
 	// Adds an aggregator to the metric.
 	AddAggregator(aggr Aggregator) QueryMetric
@@ -82,15 +82,35 @@ func NewQueryMetric(name string) QueryMetric {
 	}
 }
 
-func (qm *qMetric) AddTags(tags map[string]string) QueryMetric {
-	for k, v := range tags {
-		qm.Tags[k] = v
+func (qm *qMetric) AddTags(tags interface{}) QueryMetric {
+	switch values := tags.(type) {
+	case map[string]string:
+		for k, v := range values {
+			qm.Tags[k] = []string{v}
+		}
+	case map[string][]string:
+		for k, v := range values {
+			qm.Tags[k] = v
+		}
+	default:
+		// TODO: Throw error
+		panic("AddTags received invalid type. Must be map[string]string or map[string][]string")
 	}
+
 
 	return qm
 }
 
-func (qm *qMetric) AddTag(name string, value string) QueryMetric {
+func (qm *qMetric) AddTag(name string, value interface{}) QueryMetric {
+	switch v := value.(type) {
+		case string:
+			qm.Tags[name] = []string{v}
+		case []string:
+			qm.Tags[name] = v
+		default:
+			// TODO: Throw error
+			panic("AddTag received invalid type. Must be string or []string")
+	}
 	qm.Tags[name] = value
 	return qm
 }

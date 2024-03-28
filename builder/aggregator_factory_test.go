@@ -18,7 +18,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/tiezhong2004/go-kairosdb/builder/utils"
+	"github.com/khan-lau/go-kairosdb/builder/utils"
 	"github.com/stretchr/testify/assert"
 )
 
