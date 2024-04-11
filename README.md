@@ -1,14 +1,14 @@
-#go-kairosdb
+# go-kairosdb
 
 
 A go client for [KairosDB](http://kairosdb.github.io/).
 
-##介绍
+## 介绍
 *go-kairosdb* 是kairosdb 时序数据库的golang 语言版本的client sdk包，从github.com/ajityagaty/go-kairosdb复制过来，并新增扩展了groupby 分组查询功能，filter过滤聚合器以及gzip 数据传输。
 
-##获取 go-kairosdb
-
-go get github.com/tiezhong2004/go-kairosdb
+## 获取 go-kairosdb
+```bash
+go get github.com/khan-lau/go-kairosdb
 
 go get github.com/stretchr/testify/assert
 ```
@@ -23,7 +23,7 @@ The following sections describe the way the APIs can be used.
 The MetricBuilder interface is primarily used to stitch the metrics together and send them to KairosDB.
 One can add metrics, their associated tags and the data points using the builder.
 
-```
+```go
 // Instantiate the MetricBuilder
 mb := NewMetricBuilder()
 
@@ -50,7 +50,7 @@ The QueryBuilder is used to build the query. Every query requires a date range w
 is mandatory while the end date defaults to NOW. A specific metric can be queried for by specifying the
 metric's name and tags can be added to narrow down the search.
 
-```
+```go
 // Instantiate a QueryBuilder
 qb := builder.NewQueryBuilder()
 
@@ -73,7 +73,7 @@ queryResp, _ := cli.Query(qb)
 ### Query Metric Names
 One can get a list of all the metric names stored in KairosDB.
 
-```
+```go
 // Get an instance of the client.
 cli := client.NewHttpClient("http://localhost:1234")
 
@@ -89,7 +89,7 @@ for _, metric := range resp.Results {
 ### Query Tag Names and Values
 Similarly one can get a list of all tag names and values stored in KairosDB.
 
-```
+```go
 // Get an instance of the client.
 cli := client.NewHttpClient("http://localhost:1234")
 
@@ -112,10 +112,10 @@ for _, tagVal := range resp.Results {
 
 ### Delete Metric
 One can delete a metric and all its associated data points from KairosDB.
-On success - *StatusNoContent* is returned.
-On failure - *StatusBadRequest* or *StatusInternalServerError* is returned.
+- On success - *StatusNoContent* is returned.
+- On failure - *StatusBadRequest* or *StatusInternalServerError* is returned.
 
-```
+```go
 // Get an instance of the client.
 cli := client.NewHttpClient("http://localhost:1234")
 
@@ -134,7 +134,7 @@ One can also query the health of the KairosDB server. An HTTP *StatusNoContent*
 return code indicates that all is well. If there is any problem then an HTTP
 *StatusInternalServerError* will be returned.
 
-```
+```go
 // Get an instance of the client.
 cli := client.NewHttpClient("http://localhost:1234")
 
@@ -145,9 +145,11 @@ if healthResp.GetStatusCode() == http.StatusNoContent {
 } else {
 	fmt.Println("Internal error")
 }
+```
 
-###groupby 分组查询和filter过滤聚合方法
+### groupby 分组查询和filter过滤聚合方法
 
+```go
 groupByTags := builder.CreateTagsGroupBy([]string{"project"})
 
 aggFilterLT := builder.CreateFilterAggregator(builder.FilterOp_LT, 28098890876)
@@ -167,5 +169,4 @@ for key, _ := range PointTagCfg {
 	
 	fmt.Println(queryResp.QueriesArr)
 }
-
 ```
