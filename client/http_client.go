@@ -18,7 +18,9 @@ import (
 	"bytes"
 	"compress/gzip"
 	"encoding/json"
-	"io/ioutil"
+	"io"
+
+	// "io/ioutil"
 	"net/http"
 
 	"github.com/khan-lau/go-kairosdb/builder"
@@ -146,7 +148,8 @@ func (hc *httpClient) httpRespToResponse(httpResp *http.Response) (*response.Res
 		switch httpResp.Header.Get("Content-Encoding") {
 		case "gzip":
 			reader, _ := gzip.NewReader(httpResp.Body)
-			contents, err = ioutil.ReadAll(reader)
+			// io.ReadAll(reader)
+			contents, err = io.ReadAll(reader)
 			if err != nil {
 				return nil, err
 			} else {
@@ -157,7 +160,7 @@ func (hc *httpClient) httpRespToResponse(httpResp *http.Response) (*response.Res
 				}
 			}
 		default:
-			contents, err = ioutil.ReadAll(httpResp.Body)
+			contents, err = io.ReadAll(httpResp.Body)
 			if err != nil {
 				return nil, err
 			} else {
@@ -181,12 +184,12 @@ func (hc *httpClient) httpRespToQueryResponse(httpResp *http.Response) (*respons
 	switch httpResp.Header.Get("Content-Encoding") {
 	case "gzip":
 		reader, _ := gzip.NewReader(httpResp.Body)
-		contents, err = ioutil.ReadAll(reader)
+		contents, err = io.ReadAll(reader)
 		if err != nil {
 			return nil, err
 		}
 	default:
-		contents, err = ioutil.ReadAll(httpResp.Body)
+		contents, err = io.ReadAll(httpResp.Body)
 		if err != nil {
 			return nil, err
 		}
@@ -210,7 +213,7 @@ func (hc *httpClient) get(url string) (*response.GetResponse, error) {
 	}
 
 	defer resp.Body.Close()
-	contents, err := ioutil.ReadAll(resp.Body)
+	contents, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	} else {

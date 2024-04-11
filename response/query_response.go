@@ -34,7 +34,7 @@ type Queries struct {
 
 type QueryResponse struct {
 	*Response
-	QueriesArr []Queries `json:"queries",omitempty`
+	QueriesArr []Queries `json:"queries,omitempty"`
 }
 
 func NewQueryResponse(code int) *QueryResponse {

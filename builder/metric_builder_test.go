@@ -15,7 +15,8 @@
 package builder
 
 import (
-	"io/ioutil"
+	// "io/ioutil"
+	"os"
 	"strings"
 	"testing"
 
@@ -25,7 +26,7 @@ import (
 // Success test.
 func TestMetricBuilder(t *testing.T) {
 	// Read in the exmaple JSON ouput from file.
-	data, _ := ioutil.ReadFile("../test_resources/multiple_metrics.json")
+	data, _ := os.ReadFile("../test_resources/multiple_metrics.json")
 	// Trim the whitespace/newline.
 	str1 := strings.TrimSpace(string(data))
 
